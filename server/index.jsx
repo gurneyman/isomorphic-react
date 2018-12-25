@@ -11,7 +11,7 @@ import React from 'react';
 
 import { questions, question } from '../data/api-real-url';
 import getStore from '../src/getStore';
-import App from '..src/App';
+import App from '../src/App';
 
 
 const port = process.env.PORT || 3000;
@@ -80,12 +80,15 @@ app.get(['/'], function* (req, res) {
     const questions = yield getQuestions();
     initialState.questions = questions.items;
 
+    const store = getStore(initialState);
+
     if (useServerRender) {
         const appRendered = renderToString(
             <Provider store={store}>
                 <App />
             </Provider>
         );
+        index = index.replace('<%= preloadedApplication %>', appRendered);
     } else {
         index = index.replace('<%= preloadedApplication %>', `Please wait while we load the application.`);
     }
